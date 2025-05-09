@@ -13,7 +13,7 @@ export interface BaseTemplateMap {
 export interface ITemplate {
   slug: string;
   image: string;
-  base_template_slug: BaseTemplate;
+  base_template: BaseTemplate;
   name: string | null;
   description: string | null;
   cmd: string[];
