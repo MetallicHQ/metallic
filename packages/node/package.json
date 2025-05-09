@@ -13,12 +13,18 @@
     "url": "https://github.com/metallichq/metallic",
     "directory": "packages/node"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
   "keywords": [
     "metallic",
     "agents",
     "ai",
     "vm",
     "computer",
+    "sandbox",
     "machine",
     "nodejs",
     "javascript",
