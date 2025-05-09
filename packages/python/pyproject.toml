@@ -1,0 +1,13 @@
+[tool.poetry]
+name = "metallic"
+version = "0.1.0"
+description = "A computer for your AI."
+authors = ["metallic <team@metallic.dev>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://metallic.dev/"
+repository = "https://github.com/metallichq/metallic"
+packages = [{ include = "metallic" }]
+
+[tool.poetry.dependencies]
+python = "^3.11"
