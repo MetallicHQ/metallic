@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/strictest/tsconfig.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "exactOptionalPropertyTypes": false,
+    "allowSyntheticDefaultImports": true,
+    "allowUnusedLabels": true,
+    "noUnusedParameters": false,
+    "checkJs": false,
+    "strict": true
+  }
+}

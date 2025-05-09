@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package agent;
+
+service Agent {
+  rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
+  rpc Metrics(MetricsRequest) returns (MetricsResponse);
+}
+
+message HealthCheckRequest {}
+
+message HealthCheckResponse {
+  bool success = 1;
+}
+
+message MetricsRequest {}
+
+message MetricsResponse {
+  bool success = 1;
+  int32 cpuCount = 2;
+  double cpuUsedPct = 3;
+  int32 memTotalMiB = 4;
+  int32 memUsedMiB = 5;
+  optional string gpu = 6;
+  optional int32 vramTotalMiB = 7;
+  optional int32 vramUsedMiB = 8;  
+  string timestamp = 9;
+  string error = 10;
+}

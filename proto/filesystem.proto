@@ -1,0 +1,126 @@
+syntax = "proto3";
+
+package filesystem;
+
+service Filesystem {
+  rpc ReadFile(ReadFileRequest) returns (ReadFileResponse);
+  rpc ReadFileStream(ReadFileStreamRequest) returns (stream FileChunk);
+  rpc WriteFile(WriteFileRequest) returns (WriteFileResponse);
+  rpc WriteFileStream(stream FileChunk) returns (WriteFileResponse);
+  rpc ReadDirectory(ReadDirectoryRequest) returns (ReadDirectoryResponse);
+  rpc CreateDirectory(CreateDirectoryRequest) returns (CreateDirectoryResponse);
+  rpc Rename(RenameRequest) returns (RenameResponse);
+  rpc Unlink(UnlinkRequest) returns (UnlinkResponse);
+  rpc Exists(ExistsRequest) returns (ExistsResponse);
+  rpc GetStats(GetStatsRequest) returns (GetStatsResponse);
+  rpc Watch(WatchRequest) returns (stream WatchEvent);
+}
+
+message ReadFileRequest {
+  string path = 1;
+  string format = 2;
+}
+
+message ReadFileResponse {
+  bool success = 1;
+  string content = 2;
+  bytes binary = 3;
+  string error = 4;
+}
+
+message ReadFileStreamRequest {
+  string path = 1;
+}
+
+message FileChunk {
+  string path = 1;
+  bytes content = 2;
+  bool end = 3;
+  string error = 4;
+}
+
+message WriteFileRequest {
+  string path = 1;
+  string format = 2;
+  string content = 3;
+  bytes binary = 4; 
+}
+
+message WriteFileResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message ReadDirectoryRequest {
+  string path = 1;
+}
+message ReadDirectoryResponse {
+  bool success = 1;
+  repeated string files = 2;
+  string error = 3;
+}
+
+message CreateDirectoryRequest {
+  string path = 1;
+}
+
+message CreateDirectoryResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message RenameRequest {
+  string oldPath = 1;
+  string newPath = 2;
+}
+
+message RenameResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message UnlinkRequest {
+  string path = 1;
+}
+
+message UnlinkResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message ExistsRequest {
+  string path = 1;
+}
+
+message ExistsResponse {
+  bool success = 1;
+  bool exists = 2;
+  string error = 3;
+}
+
+message GetStatsRequest {
+  string path = 1;
+}
+
+message GetStatsResponse {
+  bool success = 1;
+  bool isDirectory = 2;
+  bool isFile = 3;
+  int64 size = 4;
+  string modifiedTime = 5;
+  string error = 6;
+}
+
+message WatchRequest {
+  string path = 1;
+  optional bool recursive = 2;
+  optional uint32 events = 3;
+}
+
+message WatchEvent {
+  string path = 1;
+  string type = 2;
+  string oldPath = 3;
+  bool isDirectory = 4;
+  string error = 5;
+}
