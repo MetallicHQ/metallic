@@ -45,24 +45,22 @@ export class ComputerClient {
   }
 
   public async list(options?: ListComputersOptions): Promise<ListComputersResponse> {
-    const res = await this.api.get<ListComputersResponse>('/computers', {
-      params: options
-    });
+    const res = await this.api.get<ListComputersResponse>('/computers', { params: options });
     return res.data;
   }
 
   public async get<T extends BaseTemplate = BaseTemplate>(id: string): Promise<ComputerFor<T>> {
-    const res = await this.api.get<IComputer & { template: { base_template_slug: T } }>(`/computers/${id}`);
+    const res = await this.api.get<IComputer & { template: { base_template: T } }>(`/computers/${id}`);
     return this.createComputerInstance<T>(res.data);
   }
 
   public async start<T extends BaseTemplate = BaseTemplate>(id: string): Promise<ComputerFor<T>> {
-    const res = await this.api.post<IComputer & { template: { base_template_slug: T } }>(`/computers/${id}/start`);
+    const res = await this.api.post<IComputer & { template: { base_template: T } }>(`/computers/${id}/start`);
     return this.createComputerInstance<T>(res.data);
   }
 
   public async stop<T extends BaseTemplate = BaseTemplate>(id: string): Promise<ComputerFor<T>> {
-    const res = await this.api.post<IComputer & { template: { base_template_slug: T } }>(`/computers/${id}/stop`);
+    const res = await this.api.post<IComputer & { template: { base_template: T } }>(`/computers/${id}/stop`);
     return this.createComputerInstance<T>(res.data);
   }
 
@@ -70,14 +68,14 @@ export class ComputerClient {
     id: string,
     options: UpdateComputerOptions
   ): Promise<ComputerFor<T>> {
-    const res = await this.api.put<IComputer & { template: { base_template_slug: T } }>(`/computers/${id}`, options);
+    const res = await this.api.put<IComputer & { template: { base_template: T } }>(`/computers/${id}`, options);
     return this.createComputerInstance<T>(res.data);
   }
 
   private createComputerInstance<T extends BaseTemplate = BaseTemplate>(
-    data: IComputer & { template: { base_template_slug: T } }
+    data: IComputer & { template: { base_template: T } }
   ): ComputerFor<T> {
-    switch (data.template.base_template_slug) {
+    switch (data.template.base_template) {
       case 'metallic-browser':
         return new ComputerWithBrowser(this.api, data) as ComputerFor<T>;
       case 'metallic-code-interpreter':

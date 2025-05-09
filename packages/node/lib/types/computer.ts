@@ -21,7 +21,6 @@ export interface IComputer {
   region: Region;
   inactivity_timeout_ms: number | null;
   auto_destroy: boolean;
-  env: Record<string, string> | null;
   metadata: Record<string, string> | null;
   created_at: string;
   updated_at: string;
@@ -32,7 +31,6 @@ export interface CreateComputerOptions {
   region?: Region;
   instance_type?: InstanceType;
   inactivity_timeout_ms?: number | null;
-  env?: Record<string, string>;
   metadata?: Record<string, string>;
   skip_launch?: boolean;
 }
@@ -55,7 +53,6 @@ export interface ListComputersResponse {
 export interface UpdateComputerOptions {
   auto_destroy?: boolean;
   inactivity_timeout_ms?: number | null;
-  env?: Record<string, string>;
   metadata?: Record<string, string>;
 }
 

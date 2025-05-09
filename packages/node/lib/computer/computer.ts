@@ -26,7 +26,6 @@ export class Computer {
   public readonly region: Region;
   public readonly inactivityTimeoutMs: number | null;
   public readonly autoDestroy: boolean;
-  public readonly env: Record<string, string> | null;
   public readonly metadata: Record<string, string> | null;
   public readonly createdAt: string;
   public readonly updatedAt: string;
@@ -46,7 +45,6 @@ export class Computer {
     this.region = data.region;
     this.inactivityTimeoutMs = data.inactivity_timeout_ms;
     this.autoDestroy = data.auto_destroy;
-    this.env = data.env;
     this.metadata = data.metadata;
     this.createdAt = data.created_at;
     this.updatedAt = data.updated_at;
