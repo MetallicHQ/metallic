@@ -4,7 +4,7 @@ const rootDir = path.resolve(__dirname, '..');
 
 const CMD =
   'protoc --plugin=protoc-gen-ts_proto=./node_modules/.bin/protoc-gen-ts_proto ' +
-  '--ts_proto_out=packages/node-sdk/lib/generated ' +
+  '--ts_proto_out=packages/node/lib/generated ' +
   '--ts_proto_opt=outputServices=grpc-js,env=node ' +
   '-I=./proto proto/*.proto';
 
