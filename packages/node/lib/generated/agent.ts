@@ -44,6 +44,16 @@ export interface MetricsResponse {
   error: string;
 }
 
+export interface GetHostRequest {
+  templateSlug: string;
+  instanceId: string;
+  port: number;
+}
+
+export interface GetHostResponse {
+  host: string;
+}
+
 function createBaseHealthCheckRequest(): HealthCheckRequest {
   return {};
 }
@@ -403,6 +413,156 @@ export const MetricsResponse: MessageFns<MetricsResponse> = {
   },
 };
 
+function createBaseGetHostRequest(): GetHostRequest {
+  return { templateSlug: "", instanceId: "", port: 0 };
+}
+
+export const GetHostRequest: MessageFns<GetHostRequest> = {
+  encode(message: GetHostRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.templateSlug !== "") {
+      writer.uint32(10).string(message.templateSlug);
+    }
+    if (message.instanceId !== "") {
+      writer.uint32(18).string(message.instanceId);
+    }
+    if (message.port !== 0) {
+      writer.uint32(24).int32(message.port);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetHostRequest {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetHostRequest();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.templateSlug = reader.string();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.instanceId = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 24) {
+            break;
+          }
+
+          message.port = reader.int32();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetHostRequest {
+    return {
+      templateSlug: isSet(object.templateSlug) ? globalThis.String(object.templateSlug) : "",
+      instanceId: isSet(object.instanceId) ? globalThis.String(object.instanceId) : "",
+      port: isSet(object.port) ? globalThis.Number(object.port) : 0,
+    };
+  },
+
+  toJSON(message: GetHostRequest): unknown {
+    const obj: any = {};
+    if (message.templateSlug !== "") {
+      obj.templateSlug = message.templateSlug;
+    }
+    if (message.instanceId !== "") {
+      obj.instanceId = message.instanceId;
+    }
+    if (message.port !== 0) {
+      obj.port = Math.round(message.port);
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetHostRequest>, I>>(base?: I): GetHostRequest {
+    return GetHostRequest.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetHostRequest>, I>>(object: I): GetHostRequest {
+    const message = createBaseGetHostRequest();
+    message.templateSlug = object.templateSlug ?? "";
+    message.instanceId = object.instanceId ?? "";
+    message.port = object.port ?? 0;
+    return message;
+  },
+};
+
+function createBaseGetHostResponse(): GetHostResponse {
+  return { host: "" };
+}
+
+export const GetHostResponse: MessageFns<GetHostResponse> = {
+  encode(message: GetHostResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.host !== "") {
+      writer.uint32(10).string(message.host);
+    }
+    return writer;
+  },
+
+  decode(input: BinaryReader | Uint8Array, length?: number): GetHostResponse {
+    const reader = input instanceof BinaryReader ? input : new BinaryReader(input);
+    let end = length === undefined ? reader.len : reader.pos + length;
+    const message = createBaseGetHostResponse();
+    while (reader.pos < end) {
+      const tag = reader.uint32();
+      switch (tag >>> 3) {
+        case 1: {
+          if (tag !== 10) {
+            break;
+          }
+
+          message.host = reader.string();
+          continue;
+        }
+      }
+      if ((tag & 7) === 4 || tag === 0) {
+        break;
+      }
+      reader.skip(tag & 7);
+    }
+    return message;
+  },
+
+  fromJSON(object: any): GetHostResponse {
+    return { host: isSet(object.host) ? globalThis.String(object.host) : "" };
+  },
+
+  toJSON(message: GetHostResponse): unknown {
+    const obj: any = {};
+    if (message.host !== "") {
+      obj.host = message.host;
+    }
+    return obj;
+  },
+
+  create<I extends Exact<DeepPartial<GetHostResponse>, I>>(base?: I): GetHostResponse {
+    return GetHostResponse.fromPartial(base ?? ({} as any));
+  },
+  fromPartial<I extends Exact<DeepPartial<GetHostResponse>, I>>(object: I): GetHostResponse {
+    const message = createBaseGetHostResponse();
+    message.host = object.host ?? "";
+    return message;
+  },
+};
+
 export type AgentService = typeof AgentService;
 export const AgentService = {
   healthCheck: {
@@ -423,11 +583,21 @@ export const AgentService = {
     responseSerialize: (value: MetricsResponse) => Buffer.from(MetricsResponse.encode(value).finish()),
     responseDeserialize: (value: Buffer) => MetricsResponse.decode(value),
   },
+  getHost: {
+    path: "/agent.Agent/GetHost",
+    requestStream: false,
+    responseStream: false,
+    requestSerialize: (value: GetHostRequest) => Buffer.from(GetHostRequest.encode(value).finish()),
+    requestDeserialize: (value: Buffer) => GetHostRequest.decode(value),
+    responseSerialize: (value: GetHostResponse) => Buffer.from(GetHostResponse.encode(value).finish()),
+    responseDeserialize: (value: Buffer) => GetHostResponse.decode(value),
+  },
 } as const;
 
 export interface AgentServer extends UntypedServiceImplementation {
   healthCheck: handleUnaryCall<HealthCheckRequest, HealthCheckResponse>;
   metrics: handleUnaryCall<MetricsRequest, MetricsResponse>;
+  getHost: handleUnaryCall<GetHostRequest, GetHostResponse>;
 }
 
 export interface AgentClient extends Client {
@@ -460,6 +630,21 @@ export interface AgentClient extends Client {
     metadata: Metadata,
     options: Partial<CallOptions>,
     callback: (error: ServiceError | null, response: MetricsResponse) => void,
+  ): ClientUnaryCall;
+  getHost(
+    request: GetHostRequest,
+    callback: (error: ServiceError | null, response: GetHostResponse) => void,
+  ): ClientUnaryCall;
+  getHost(
+    request: GetHostRequest,
+    metadata: Metadata,
+    callback: (error: ServiceError | null, response: GetHostResponse) => void,
+  ): ClientUnaryCall;
+  getHost(
+    request: GetHostRequest,
+    metadata: Metadata,
+    options: Partial<CallOptions>,
+    callback: (error: ServiceError | null, response: GetHostResponse) => void,
   ): ClientUnaryCall;
 }
 

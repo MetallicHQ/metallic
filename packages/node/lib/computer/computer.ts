@@ -62,8 +62,8 @@ export class Computer {
     return this.agent.getMetrics();
   }
 
-  public getHost(port: number): string {
-    return `${this.template.slug}-${this.instanceId}-${port}.metallic.computer`;
+  public async getHost(port: number): Promise<string> {
+    return this.agent.getHost(port);
   }
 
   public async start(): Promise<this> {

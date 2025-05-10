@@ -26,4 +26,9 @@ export class Agent {
       timestamp: response.timestamp
     };
   }
+
+  async getHost(port: number): Promise<string> {
+    const response = await this.agentService.getHost(port);
+    return response.host;
+  }
 }
