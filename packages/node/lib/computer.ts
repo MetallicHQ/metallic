@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
-import { Agent } from '../tools/agent';
-import { Filesystem } from '../tools/filesystem';
-import { Terminal } from '../tools/terminal';
-import { Metrics } from '../types/agent';
+import { Agent } from './tools/agent';
+import { Filesystem } from './tools/filesystem';
+import { Terminal } from './tools/terminal';
+import { Metrics } from './types/agent';
 import {
   ComputerDestroyedResponse,
   ComputerState,
@@ -10,10 +10,8 @@ import {
   InstanceType,
   Region,
   UpdateComputerOptions
-} from '../types/computer';
-import { ITemplate } from '../types/template';
-
-export type ComputerCtor<T> = new (api: AxiosInstance, data: IComputer) => T;
+} from './types/computer';
+import { ITemplate } from './types/template';
 
 export class Computer {
   protected readonly api: AxiosInstance;
@@ -66,19 +64,19 @@ export class Computer {
     return this.agent.getHost(port);
   }
 
-  public async start(): Promise<this> {
+  public async start(): Promise<Computer> {
     const res = await this.api.post<IComputer>(`/computers/${this.id}/start`);
-    return this._new(res.data);
+    return new Computer(this.api, res.data);
   }
 
-  public async stop(): Promise<this> {
+  public async stop(): Promise<Computer> {
     const res = await this.api.post<IComputer>(`/computers/${this.id}/stop`);
-    return this._new(res.data);
+    return new Computer(this.api, res.data);
   }
 
-  public async update(opts: UpdateComputerOptions): Promise<this> {
+  public async update(opts: UpdateComputerOptions): Promise<Computer> {
     const res = await this.api.put<IComputer>(`/computers/${this.id}`, opts);
-    return this._new(res.data);
+    return new Computer(this.api, res.data);
   }
 
   public async waitForState(state: 'started' | 'stopped' | 'destroyed'): Promise<void> {
@@ -88,10 +86,5 @@ export class Computer {
   public async destroy(): Promise<ComputerDestroyedResponse> {
     const response = await this.api.delete<ComputerDestroyedResponse>(`/computers/${this.id}`);
     return response.data;
-  }
-
-  protected _new(data: IComputer): this {
-    const Ctor = this.constructor as ComputerCtor<this>;
-    return new Ctor(this.api, data);
   }
 }
