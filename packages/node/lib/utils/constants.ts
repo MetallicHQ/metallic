@@ -1,3 +1,1 @@
 export const METALLIC_AGENT_PORT = 50051;
-export const METALLIC_JUPYTER_PORT = 49999;
-export const DEFAULT_TIMEOUT_MS = 60_000;
