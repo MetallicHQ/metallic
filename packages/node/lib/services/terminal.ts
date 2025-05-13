@@ -18,9 +18,9 @@ import { METALLIC_AGENT_PORT } from '../utils/constants';
 export class TerminalService {
   private client: TerminalClient;
 
-  constructor(templateSlug: string, instanceId: string) {
+  constructor(template: string, virtualMachineId: string) {
     this.client = new TerminalClient(
-      `${templateSlug}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
+      `${template}-${virtualMachineId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
       grpc.credentials.createSsl()
     );
   }

@@ -1,5 +1,20 @@
-import { PaginationParameters } from './shared';
-import { ITemplate } from './template';
+import { ApiClientOptions } from './api';
+import { Instance, Region } from './shared';
+
+export type ComputerConstructorOptions = ApiClientOptions & Omit<IComputer, 'object' | 'created_at' | 'updated_at'>;
+
+export interface ComputerCreateOptions extends ApiClientOptions {
+  template?: string;
+  region?: Region;
+  instance?: Instance;
+  inactivityTimeoutMs?: number | null;
+  metadata?: Record<string, string>;
+  skipLaunch?: boolean;
+}
+
+export interface ComputerConnectOptions extends ApiClientOptions {}
+
+export interface ComputerStartOptions extends ApiClientOptions {}
 
 export type ComputerState =
   | 'created'
@@ -14,9 +29,9 @@ export type ComputerState =
 export interface IComputer {
   object: 'computer';
   id: string;
-  template: ITemplate;
-  instance_id: string;
-  instance_type: InstanceType;
+  template: string;
+  virtual_machine_id: string;
+  instance: Instance;
   state: ComputerState;
   region: Region;
   inactivity_timeout_ms: number | null;
@@ -26,86 +41,37 @@ export interface IComputer {
   updated_at: string;
 }
 
-export interface CreateComputerOptions {
-  template?: string;
-  region?: Region;
-  instance_type?: InstanceType;
-  inactivity_timeout_ms?: number | null;
-  metadata?: Record<string, string>;
-  skip_launch?: boolean;
+export interface Metrics {
+  /**
+   * The number of CPU cores.
+   */
+  cpuCount: number;
+  /**
+   * The percentage of CPU used.
+   */
+  cpuUsedPct: number;
+  /**
+   * The total memory in MB.
+   */
+  memTotalMiB: number;
+  /**
+   * The used memory in MB.
+   */
+  memUsedMiB: number;
+  /**
+   * The name of the GPU.
+   */
+  gpu: string | undefined;
+  /**
+   * The total VRAM in MB.
+   */
+  vramTotalMiB: number | undefined;
+  /**
+   * The used VRAM in MB.
+   */
+  vramUsedMiB: number | undefined;
+  /**
+   * The timestamp of the metrics.
+   */
+  timestamp: string;
 }
-
-export interface ListComputersOptions extends PaginationParameters {
-  region?: Region;
-  instance_type?: InstanceType;
-  state?: ComputerState;
-  template?: string;
-}
-
-export interface ListComputersResponse {
-  object: 'list';
-  data: IComputer[];
-  first: string | null;
-  last: string | null;
-  has_more: boolean;
-}
-
-export interface UpdateComputerOptions {
-  auto_destroy?: boolean;
-  inactivity_timeout_ms?: number | null;
-  metadata?: Record<string, string>;
-}
-
-export interface ComputerDestroyedResponse {
-  object: 'computer';
-  id: string;
-  destroyed: true;
-}
-
-export type Region =
-  | 'ams' // Amsterdam, Netherlands
-  | 'arn' // Stockholm, Sweden
-  | 'atl' // Atlanta, Georgia (US)
-  | 'bog' // Bogotá, Colombia
-  | 'bom' // Mumbai, India
-  | 'bos' // Boston, Massachusetts (US)
-  | 'cdg' // Paris, France
-  | 'den' // Denver, Colorado (US)
-  | 'dfw' // Dallas, Texas (US)
-  | 'ewr' // Secaucus, NJ (US)
-  | 'eze' // Ezeiza, Argentina
-  | 'fra' // Frankfurt, Germany
-  | 'gdl' // Guadalajara, Mexico
-  | 'gig' // Rio de Janeiro, Brazil
-  | 'gru' // São Paulo, Brazil
-  | 'hkg' // Hong Kong
-  | 'iad' // Ashburn, Virginia (US)
-  | 'jnb' // Johannesburg, South Africa
-  | 'lax' // Los Angeles, California (US)
-  | 'lhr' // London, United Kingdom
-  | 'mad' // Madrid, Spain
-  | 'mia' // Miami, Florida (US)
-  | 'nrt' // Tokyo, Japan
-  | 'ord' // Chicago, Illinois (US)
-  | 'otp' // Bucharest, Romania
-  | 'phx' // Phoenix, Arizona (US)
-  | 'qro' // Querétaro, Mexico
-  | 'scl' // Santiago, Chile
-  | 'sea' // Seattle, Washington (US)
-  | 'sin' // Singapore
-  | 'sjc' // San Jose, California (US)
-  | 'syd' // Sydney, Australia
-  | 'waw' // Warsaw, Poland
-  | 'yul' // Montreal, Canada
-  | 'yyz'; // Toronto, Canada
-
-export type InstanceType =
-  | '1x2' // 1 CPU, 2GB RAM
-  | '2x4' // 2 CPUs, 4GB RAM
-  | '4x8' // 4 CPUs, 8GB RAM
-  | '8x16' // 8 CPUs, 16GB RAM
-  | '16x32' // 16 CPUs, 32GB RAM
-  | 'a10' // 8 CPUs, 32GB RAM, A10 GPU
-  | 'a100-40gb' // 8 CPUs, 32GB RAM, A100 GPU
-  | 'a100-80gb' // 8 CPUs, 32GB RAM, A100 GPU
-  | 'l40s'; // 8 CPUs, 32GB RAM, L40S GPU

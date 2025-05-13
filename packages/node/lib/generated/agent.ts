@@ -26,6 +26,7 @@ export interface HealthCheckRequest {
 
 export interface HealthCheckResponse {
   success: boolean;
+  error: string;
 }
 
 export interface MetricsRequest {
@@ -45,13 +46,15 @@ export interface MetricsResponse {
 }
 
 export interface GetHostRequest {
-  templateSlug: string;
-  instanceId: string;
+  template: string;
+  virtualMachineId: string;
   port: number;
 }
 
 export interface GetHostResponse {
+  success: boolean;
   host: string;
+  error: string;
 }
 
 function createBaseHealthCheckRequest(): HealthCheckRequest {
@@ -98,13 +101,16 @@ export const HealthCheckRequest: MessageFns<HealthCheckRequest> = {
 };
 
 function createBaseHealthCheckResponse(): HealthCheckResponse {
-  return { success: false };
+  return { success: false, error: "" };
 }
 
 export const HealthCheckResponse: MessageFns<HealthCheckResponse> = {
   encode(message: HealthCheckResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
     if (message.success !== false) {
       writer.uint32(8).bool(message.success);
+    }
+    if (message.error !== "") {
+      writer.uint32(18).string(message.error);
     }
     return writer;
   },
@@ -124,6 +130,14 @@ export const HealthCheckResponse: MessageFns<HealthCheckResponse> = {
           message.success = reader.bool();
           continue;
         }
+        case 2: {
+          if (tag !== 18) {
+            break;
+          }
+
+          message.error = reader.string();
+          continue;
+        }
       }
       if ((tag & 7) === 4 || tag === 0) {
         break;
@@ -134,13 +148,19 @@ export const HealthCheckResponse: MessageFns<HealthCheckResponse> = {
   },
 
   fromJSON(object: any): HealthCheckResponse {
-    return { success: isSet(object.success) ? globalThis.Boolean(object.success) : false };
+    return {
+      success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
+      error: isSet(object.error) ? globalThis.String(object.error) : "",
+    };
   },
 
   toJSON(message: HealthCheckResponse): unknown {
     const obj: any = {};
     if (message.success !== false) {
       obj.success = message.success;
+    }
+    if (message.error !== "") {
+      obj.error = message.error;
     }
     return obj;
   },
@@ -151,6 +171,7 @@ export const HealthCheckResponse: MessageFns<HealthCheckResponse> = {
   fromPartial<I extends Exact<DeepPartial<HealthCheckResponse>, I>>(object: I): HealthCheckResponse {
     const message = createBaseHealthCheckResponse();
     message.success = object.success ?? false;
+    message.error = object.error ?? "";
     return message;
   },
 };
@@ -414,16 +435,16 @@ export const MetricsResponse: MessageFns<MetricsResponse> = {
 };
 
 function createBaseGetHostRequest(): GetHostRequest {
-  return { templateSlug: "", instanceId: "", port: 0 };
+  return { template: "", virtualMachineId: "", port: 0 };
 }
 
 export const GetHostRequest: MessageFns<GetHostRequest> = {
   encode(message: GetHostRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.templateSlug !== "") {
-      writer.uint32(10).string(message.templateSlug);
+    if (message.template !== "") {
+      writer.uint32(10).string(message.template);
     }
-    if (message.instanceId !== "") {
-      writer.uint32(18).string(message.instanceId);
+    if (message.virtualMachineId !== "") {
+      writer.uint32(18).string(message.virtualMachineId);
     }
     if (message.port !== 0) {
       writer.uint32(24).int32(message.port);
@@ -443,7 +464,7 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
             break;
           }
 
-          message.templateSlug = reader.string();
+          message.template = reader.string();
           continue;
         }
         case 2: {
@@ -451,7 +472,7 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
             break;
           }
 
-          message.instanceId = reader.string();
+          message.virtualMachineId = reader.string();
           continue;
         }
         case 3: {
@@ -473,19 +494,19 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
 
   fromJSON(object: any): GetHostRequest {
     return {
-      templateSlug: isSet(object.templateSlug) ? globalThis.String(object.templateSlug) : "",
-      instanceId: isSet(object.instanceId) ? globalThis.String(object.instanceId) : "",
+      template: isSet(object.template) ? globalThis.String(object.template) : "",
+      virtualMachineId: isSet(object.virtualMachineId) ? globalThis.String(object.virtualMachineId) : "",
       port: isSet(object.port) ? globalThis.Number(object.port) : 0,
     };
   },
 
   toJSON(message: GetHostRequest): unknown {
     const obj: any = {};
-    if (message.templateSlug !== "") {
-      obj.templateSlug = message.templateSlug;
+    if (message.template !== "") {
+      obj.template = message.template;
     }
-    if (message.instanceId !== "") {
-      obj.instanceId = message.instanceId;
+    if (message.virtualMachineId !== "") {
+      obj.virtualMachineId = message.virtualMachineId;
     }
     if (message.port !== 0) {
       obj.port = Math.round(message.port);
@@ -498,21 +519,27 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
   },
   fromPartial<I extends Exact<DeepPartial<GetHostRequest>, I>>(object: I): GetHostRequest {
     const message = createBaseGetHostRequest();
-    message.templateSlug = object.templateSlug ?? "";
-    message.instanceId = object.instanceId ?? "";
+    message.template = object.template ?? "";
+    message.virtualMachineId = object.virtualMachineId ?? "";
     message.port = object.port ?? 0;
     return message;
   },
 };
 
 function createBaseGetHostResponse(): GetHostResponse {
-  return { host: "" };
+  return { success: false, host: "", error: "" };
 }
 
 export const GetHostResponse: MessageFns<GetHostResponse> = {
   encode(message: GetHostResponse, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
+    if (message.success !== false) {
+      writer.uint32(8).bool(message.success);
+    }
     if (message.host !== "") {
-      writer.uint32(10).string(message.host);
+      writer.uint32(18).string(message.host);
+    }
+    if (message.error !== "") {
+      writer.uint32(26).string(message.error);
     }
     return writer;
   },
@@ -525,11 +552,27 @@ export const GetHostResponse: MessageFns<GetHostResponse> = {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1: {
-          if (tag !== 10) {
+          if (tag !== 8) {
+            break;
+          }
+
+          message.success = reader.bool();
+          continue;
+        }
+        case 2: {
+          if (tag !== 18) {
             break;
           }
 
           message.host = reader.string();
+          continue;
+        }
+        case 3: {
+          if (tag !== 26) {
+            break;
+          }
+
+          message.error = reader.string();
           continue;
         }
       }
@@ -542,13 +585,23 @@ export const GetHostResponse: MessageFns<GetHostResponse> = {
   },
 
   fromJSON(object: any): GetHostResponse {
-    return { host: isSet(object.host) ? globalThis.String(object.host) : "" };
+    return {
+      success: isSet(object.success) ? globalThis.Boolean(object.success) : false,
+      host: isSet(object.host) ? globalThis.String(object.host) : "",
+      error: isSet(object.error) ? globalThis.String(object.error) : "",
+    };
   },
 
   toJSON(message: GetHostResponse): unknown {
     const obj: any = {};
+    if (message.success !== false) {
+      obj.success = message.success;
+    }
     if (message.host !== "") {
       obj.host = message.host;
+    }
+    if (message.error !== "") {
+      obj.error = message.error;
     }
     return obj;
   },
@@ -558,7 +611,9 @@ export const GetHostResponse: MessageFns<GetHostResponse> = {
   },
   fromPartial<I extends Exact<DeepPartial<GetHostResponse>, I>>(object: I): GetHostResponse {
     const message = createBaseGetHostResponse();
+    message.success = object.success ?? false;
     message.host = object.host ?? "";
+    message.error = object.error ?? "";
     return message;
   },
 };
