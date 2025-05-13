@@ -12,6 +12,7 @@ message HealthCheckRequest {}
 
 message HealthCheckResponse {
   bool success = 1;
+  string error = 2;
 }
 
 message MetricsRequest {}
@@ -30,11 +31,13 @@ message MetricsResponse {
 }
 
 message GetHostRequest {
-  string templateSlug = 1;
-  string instanceId = 2;
+  string template = 1;
+  string virtualMachineId = 2;
   int32 port = 3;
 }
 
 message GetHostResponse {
-  string host = 1;
+  bool success = 1;
+  string host = 2;
+  string error = 3;
 }
