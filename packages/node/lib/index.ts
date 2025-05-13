@@ -18,5 +18,4 @@ export type * from './types/code-interpreter';
 export type * from './types/computer';
 export type * from './types/fs';
 export type * from './types/shared';
-export type * from './types/template';
 export type * from './types/terminal';
