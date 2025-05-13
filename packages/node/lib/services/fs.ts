@@ -27,9 +27,9 @@ import { METALLIC_AGENT_PORT } from '../utils/constants';
 export class FilesystemService {
   private client: FilesystemClient;
 
-  constructor(templateSlug: string, instanceId: string) {
+  constructor(template: string, virtualMachineId: string) {
     this.client = new FilesystemClient(
-      `${templateSlug}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
+      `${template}-${virtualMachineId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
       grpc.credentials.createSsl()
     );
   }

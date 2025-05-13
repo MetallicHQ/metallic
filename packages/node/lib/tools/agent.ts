@@ -1,11 +1,11 @@
 import { AgentService } from '../services/agent';
-import { Metrics } from '../types/agent';
+import { Metrics } from '../types/computer';
 
-export class Agent {
+export class AgentTool {
   private readonly agentService: AgentService;
 
-  constructor(template: string, token: string) {
-    this.agentService = new AgentService(template, token);
+  constructor(template: string, virtualMachineId: string) {
+    this.agentService = new AgentService(template, virtualMachineId);
   }
 
   async healthCheck(): Promise<boolean> {
@@ -16,13 +16,13 @@ export class Agent {
   async getMetrics(): Promise<Metrics> {
     const response = await this.agentService.getMetrics();
     return {
-      cpu_count: response.cpuCount,
-      cpu_used_pct: response.cpuUsedPct,
-      mem_total_mib: response.memTotalMiB,
-      mem_used_mib: response.memUsedMiB,
+      cpuCount: response.cpuCount,
+      cpuUsedPct: response.cpuUsedPct,
+      memTotalMiB: response.memTotalMiB,
+      memUsedMiB: response.memUsedMiB,
       gpu: response.gpu,
-      vram_total_mib: response.vramTotalMiB,
-      vram_used_mib: response.vramUsedMiB,
+      vramTotalMiB: response.vramTotalMiB,
+      vramUsedMiB: response.vramUsedMiB,
       timestamp: response.timestamp
     };
   }

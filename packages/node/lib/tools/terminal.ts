@@ -3,11 +3,11 @@ import { ProcessEvent, ProcessInfo } from '../generated/terminal';
 import { TerminalService } from '../services/terminal';
 import { CommandResult, ConnectToProcessOptions, RunCommandOptions } from '../types/terminal';
 
-export class Terminal {
+export class TerminalTool {
   private readonly terminalService: TerminalService;
 
-  constructor(template: string, token: string) {
-    this.terminalService = new TerminalService(template, token);
+  constructor(template: string, virtualMachineId: string) {
+    this.terminalService = new TerminalService(template, virtualMachineId);
   }
 
   /**
@@ -37,7 +37,7 @@ export class Terminal {
       rows: options?.rows || 24
     });
 
-    const pid = await Terminal.waitForPid(stream);
+    const pid = await TerminalTool.waitForPid(stream);
 
     const handle = new ProcessHandle(
       pid,

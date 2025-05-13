@@ -14,11 +14,11 @@ export class AgentService {
   private client: AgentClient;
 
   constructor(
-    private templateSlug: string,
-    private instanceId: string
+    private template: string,
+    private virtualMachineId: string
   ) {
     this.client = new AgentClient(
-      `${templateSlug}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
+      `${template}-${virtualMachineId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
       grpc.credentials.createSsl()
     );
   }
@@ -29,6 +29,11 @@ export class AgentService {
       this.client.healthCheck(request, (err, response) => {
         if (err) {
           reject(err);
+          return;
+        }
+
+        if (!response.success) {
+          reject(new Error(response.error));
           return;
         }
 
@@ -46,6 +51,11 @@ export class AgentService {
           return;
         }
 
+        if (!response.success) {
+          reject(new Error(response.error));
+          return;
+        }
+
         resolve(response);
       });
     });
@@ -54,14 +64,19 @@ export class AgentService {
   async getHost(port: number): Promise<GetHostResponse> {
     return new Promise((resolve, reject) => {
       const request: GetHostRequest = {
-        templateSlug: this.templateSlug,
-        instanceId: this.instanceId,
+        template: this.template,
+        virtualMachineId: this.virtualMachineId,
         port
       };
 
       this.client.getHost(request, (err, response) => {
         if (err) {
           reject(err);
+          return;
+        }
+
+        if (!response.success) {
+          reject(new Error(response.error));
           return;
         }
 

@@ -1,14 +1,14 @@
 import { ClientWritableStream } from '@grpc/grpc-js';
 import { Readable, Writable } from 'stream';
 import { FileChunk } from '../generated/filesystem';
-import { FilesystemService } from '../services/filesystem';
-import { WatchEvent, WatchEventType, WatchHandle, WatchOptions } from '../types/filesystem';
+import { FilesystemService } from '../services/fs';
+import { WatchEvent, WatchEventType, WatchHandle, WatchOptions } from '../types/fs';
 
-export class Filesystem {
+export class FilesystemTool {
   private readonly fs: FilesystemService;
 
-  constructor(templateSlug: string, instanceId: string) {
-    this.fs = new FilesystemService(templateSlug, instanceId);
+  constructor(template: string, virtualMachineId: string) {
+    this.fs = new FilesystemService(template, virtualMachineId);
   }
 
   /**
