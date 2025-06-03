@@ -1,6 +1,6 @@
 {
   "name": "@metallichq/sdk",
-  "version": "0.1.0-beta.1",
+  "version": "1.0.0-beta.1",
   "homepage": "https://metallic.dev",
   "description": "A computer for your AI agent.",
   "license": "MIT",
