@@ -29,12 +29,6 @@ export interface ComputerCreateOptions extends ApiClientOptions {
    */
   autoDestroy?: boolean;
   /**
-   * Whether to skip launching the computer after it is created.
-   *
-   * @defaultValue `false`
-   */
-  skipLaunch?: boolean;
-  /**
    * The environment variables to set for the computer.
    */
   env?: Record<string, string>;

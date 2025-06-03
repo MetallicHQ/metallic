@@ -109,7 +109,7 @@ export class Computer extends ApiClient {
    * @constructs Computer
    */
   public static async create(options?: ComputerCreateOptions): Promise<Computer> {
-    const { template, ttlSeconds, region, autoDestroy, env, metadata, skipLaunch, ...rest } = options ?? {};
+    const { template, ttlSeconds, region, autoDestroy, env, metadata, ...rest } = options ?? {};
 
     const client = new ApiClient(rest);
     const res = await client.api.post<IComputer>('/computers', {
@@ -118,11 +118,10 @@ export class Computer extends ApiClient {
       ttl_seconds: ttlSeconds,
       auto_destroy: autoDestroy,
       env,
-      metadata,
-      skip_launch: skipLaunch
+      metadata
     });
 
-    return new Computer(res.data);
+    return new Computer({ ...res.data, ...rest });
   }
 
   /**
@@ -142,7 +141,7 @@ export class Computer extends ApiClient {
   public static async start(computerId: string, options?: ComputerStartOptions): Promise<Computer> {
     const client = new ApiClient(options);
     const res = await client.api.post<IComputer>(`/computers/${computerId}/start`);
-    return new Computer(res.data);
+    return new Computer({ ...res.data, ...(options ?? {}) });
   }
 
   /**
@@ -173,7 +172,7 @@ export class Computer extends ApiClient {
   public static async connect(computerId: string, options?: ComputerConnectOptions): Promise<Computer> {
     const client = new ApiClient(options);
     const res = await client.api.post<IComputer>(`/computers/${computerId}/connect`);
-    return new Computer(res.data);
+    return new Computer({ ...res.data, ...(options ?? {}) });
   }
 
   /**
