@@ -1,0 +1,1 @@
+export const METALLIC_AGENT_PORT = 50051;

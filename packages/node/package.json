@@ -1,0 +1,52 @@
+{
+  "name": "@metallichq/sdk",
+  "version": "0.1.0-beta.1",
+  "homepage": "https://metallic.dev",
+  "description": "A computer for your AI agent.",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "bugs": "https://github.com/metallichq/metallic/issues",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/metallichq/metallic",
+    "directory": "packages/node"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "package.json"
+  ],
+  "keywords": [
+    "metallic",
+    "agents",
+    "ai",
+    "vm",
+    "computer",
+    "sandbox",
+    "machine",
+    "nodejs",
+    "javascript",
+    "typescript"
+  ],
+  "scripts": {
+    "build": "tsc --noEmit && tsup",
+    "dev": "tsup --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "@types/node": "^18.18.6",
+    "tsup": "^8.3.6"
+  },
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.1",
+    "axios": "^1.9.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "browserslist": [
+    "defaults"
+  ]
+}

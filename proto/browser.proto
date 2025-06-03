@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package browser;
+
+service Browser {
+  rpc CreateSession(CreateSessionRequest) returns (CreateSessionResponse);
+  rpc TerminateSession(TerminateSessionRequest) returns (TerminateSessionResponse);
+}
+
+message CreateSessionRequest {
+  optional string proxyUrl = 1;
+  optional string userAgent = 2;
+  optional string context = 3;
+  map<string, string> customHeaders = 4;  
+  optional bool blockAds = 5;
+  optional string timezone = 6;
+  optional Dimensions dimensions = 7;
+  optional int32 timeout = 8;
+}
+
+message Dimensions {
+  int32 width = 1;
+  int32 height = 2;
+}
+
+message CreateSessionResponse {
+  bool success = 1;
+  int32 cdpPort = 2;
+  string error = 3;
+}
+
+message TerminateSessionRequest {}
+
+message TerminateSessionResponse {
+  bool success = 1;
+  string error = 2;
+}

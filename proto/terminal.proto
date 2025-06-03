@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package terminal;
+
+service Terminal {
+  rpc ListProcesses(ListProcessesRequest) returns (ListProcessesResponse);
+  rpc SpawnProcess(SpawnProcessRequest) returns (stream ProcessEvent);
+  rpc ConnectToProcess(ConnectToProcessRequest) returns (stream ProcessEvent);
+  rpc SendInput(SendInputRequest) returns (SendInputResponse);
+  rpc UpdateProcess(UpdateProcessRequest) returns (UpdateProcessResponse);
+  rpc SendSignal(SendSignalRequest) returns (SendSignalResponse);
+}
+
+message ListProcessesRequest {}
+
+message ProcessInfo {
+  int32 pid = 1;
+  string command = 2;
+  string cwd = 3;
+  uint32 cols = 4;
+  uint32 rows = 5;
+  int64 startTime = 6;
+}
+
+message ListProcessesResponse {
+  bool success = 1;
+  repeated ProcessInfo processes = 2;
+  string error = 3;
+}
+
+message SpawnProcessRequest {
+  string cmd = 1;
+  string cwd = 2;
+  map<string, string> env = 3;
+  repeated string args = 4;
+  uint32 cols = 5;
+  uint32 rows = 6;
+}
+
+message SpawnProcessResponse {
+  bool success = 1;
+  int32 pid = 2;
+  string error = 3;
+}
+
+message ConnectToProcessRequest {
+  int32 pid = 1;
+}
+
+message ProcessEvent {
+  int32 pid = 1;
+  string type = 2;
+  bytes data = 3;
+  string error = 4;
+  int32 exitCode = 5;
+}
+
+message SendInputRequest {
+  int32 pid = 1;
+  bytes input = 2;
+}
+
+message SendInputResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message UpdateProcessRequest {
+  int32 pid = 1;
+  uint32 cols = 2;
+  uint32 rows = 3;
+}
+
+message UpdateProcessResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message SendSignalRequest {
+  int32 pid = 1;
+  string signal = 2;
+}
+
+message SendSignalResponse {
+  bool success = 1;
+  string error = 2;
+}

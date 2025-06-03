@@ -1,0 +1,9 @@
+[tool.poetry]
+name        = "metallic"
+version     = "1.0.0-beta.1"
+description = "A computer for your AI."
+authors     = ["metallic <team@metallic.dev>"]
+license     = "MIT"
+readme      = "README.md"
+homepage    = "https://metallic.dev/"
+repository  = "https://github.com/metallichq/metallic"
