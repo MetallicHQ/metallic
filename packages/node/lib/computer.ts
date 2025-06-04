@@ -16,7 +16,6 @@ import { Region } from './types/shared';
 
 export class Computer extends ApiClient {
   public readonly id: string;
-  public readonly instanceId: string;
   public readonly template: string;
   public readonly state: ComputerState;
   public readonly region: Region;
@@ -31,17 +30,16 @@ export class Computer extends ApiClient {
   constructor(options: ComputerConstructorOptions) {
     super(options);
     this.id = options.id;
-    this.instanceId = options.instance_id;
     this.template = options.template;
     this.state = options.state;
     this.region = options.region;
     this.ttlSeconds = options.ttl_seconds;
     this.autoDestroy = options.auto_destroy;
     this.metadata = options.metadata;
-    this.agent = new AgentTool(options.template, options.instance_id);
-    this.fs = new FilesystemTool(options.template, options.instance_id);
-    this.terminal = new TerminalTool(options.template, options.instance_id);
-    this.browser = new BrowserTool(options.template, options.instance_id);
+    this.agent = new AgentTool(options.project_id, options.instance_id);
+    this.fs = new FilesystemTool(options.project_id, options.instance_id);
+    this.terminal = new TerminalTool(options.project_id, options.instance_id);
+    this.browser = new BrowserTool(options.project_id, options.instance_id);
   }
 
   /**

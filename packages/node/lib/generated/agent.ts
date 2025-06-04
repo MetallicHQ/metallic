@@ -46,7 +46,7 @@ export interface MetricsResponse {
 }
 
 export interface GetHostRequest {
-  template: string;
+  projectId: string;
   instanceId: string;
   port: number;
 }
@@ -435,13 +435,13 @@ export const MetricsResponse: MessageFns<MetricsResponse> = {
 };
 
 function createBaseGetHostRequest(): GetHostRequest {
-  return { template: "", instanceId: "", port: 0 };
+  return { projectId: "", instanceId: "", port: 0 };
 }
 
 export const GetHostRequest: MessageFns<GetHostRequest> = {
   encode(message: GetHostRequest, writer: BinaryWriter = new BinaryWriter()): BinaryWriter {
-    if (message.template !== "") {
-      writer.uint32(10).string(message.template);
+    if (message.projectId !== "") {
+      writer.uint32(10).string(message.projectId);
     }
     if (message.instanceId !== "") {
       writer.uint32(18).string(message.instanceId);
@@ -464,7 +464,7 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
             break;
           }
 
-          message.template = reader.string();
+          message.projectId = reader.string();
           continue;
         }
         case 2: {
@@ -494,7 +494,7 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
 
   fromJSON(object: any): GetHostRequest {
     return {
-      template: isSet(object.template) ? globalThis.String(object.template) : "",
+      projectId: isSet(object.projectId) ? globalThis.String(object.projectId) : "",
       instanceId: isSet(object.instanceId) ? globalThis.String(object.instanceId) : "",
       port: isSet(object.port) ? globalThis.Number(object.port) : 0,
     };
@@ -502,8 +502,8 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
 
   toJSON(message: GetHostRequest): unknown {
     const obj: any = {};
-    if (message.template !== "") {
-      obj.template = message.template;
+    if (message.projectId !== "") {
+      obj.projectId = message.projectId;
     }
     if (message.instanceId !== "") {
       obj.instanceId = message.instanceId;
@@ -519,7 +519,7 @@ export const GetHostRequest: MessageFns<GetHostRequest> = {
   },
   fromPartial<I extends Exact<DeepPartial<GetHostRequest>, I>>(object: I): GetHostRequest {
     const message = createBaseGetHostRequest();
-    message.template = object.template ?? "";
+    message.projectId = object.projectId ?? "";
     message.instanceId = object.instanceId ?? "";
     message.port = object.port ?? 0;
     return message;

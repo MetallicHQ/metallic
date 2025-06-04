@@ -5,14 +5,14 @@ export class BrowserTool {
   private readonly browserService: BrowserService;
 
   constructor(
-    private readonly template: string,
+    private readonly projectId: string,
     private readonly instanceId: string
   ) {
-    this.browserService = new BrowserService(template, instanceId);
+    this.browserService = new BrowserService(projectId, instanceId);
   }
 
   private getCdpUrl(cdpPort: number): string {
-    return `https://${this.template}-${this.instanceId}-${cdpPort}.metallic.computer`;
+    return `https://${this.projectId}-${this.instanceId}-${cdpPort}.metallic.computer`;
   }
 
   /**

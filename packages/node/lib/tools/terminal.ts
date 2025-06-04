@@ -6,8 +6,8 @@ import { CommandResult, ConnectToProcessOptions, RunCommandOptions } from '../ty
 export class TerminalTool {
   private readonly terminalService: TerminalService;
 
-  constructor(template: string, instanceId: string) {
-    this.terminalService = new TerminalService(template, instanceId);
+  constructor(projectId: string, instanceId: string) {
+    this.terminalService = new TerminalService(projectId, instanceId);
   }
 
   /**

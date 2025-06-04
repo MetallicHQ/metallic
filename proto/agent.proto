@@ -31,7 +31,7 @@ message MetricsResponse {
 }
 
 message GetHostRequest {
-  string template = 1;
+  string projectId = 1;
   string instanceId = 2;
   int32 port = 3;
 }

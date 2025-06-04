@@ -59,6 +59,10 @@ export interface IComputer {
    */
   id: string;
   /**
+   * The unique identifier for the project.
+   */
+  project_id: string;
+  /**
    * The template slug the computer was created from.
    */
   template: string;

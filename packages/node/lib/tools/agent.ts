@@ -4,8 +4,8 @@ import { Metrics } from '../types/agent';
 export class AgentTool {
   private readonly agentService: AgentService;
 
-  constructor(template: string, instanceId: string) {
-    this.agentService = new AgentService(template, instanceId);
+  constructor(projectId: string, instanceId: string) {
+    this.agentService = new AgentService(projectId, instanceId);
   }
 
   async healthCheck(): Promise<boolean> {

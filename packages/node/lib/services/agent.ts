@@ -14,11 +14,11 @@ export class AgentService {
   private client: AgentClient;
 
   constructor(
-    private template: string,
+    private projectId: string,
     private instanceId: string
   ) {
     this.client = new AgentClient(
-      `${template}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
+      `${projectId}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
       grpc.credentials.createSsl()
     );
   }
@@ -64,7 +64,7 @@ export class AgentService {
   async getHost(port: number): Promise<GetHostResponse> {
     return new Promise((resolve, reject) => {
       const request: GetHostRequest = {
-        template: this.template,
+        projectId: this.projectId,
         instanceId: this.instanceId,
         port
       };

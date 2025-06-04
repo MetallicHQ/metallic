@@ -7,8 +7,8 @@ import { WatchEvent, WatchEventType, WatchHandle, WatchOptions } from '../types/
 export class FilesystemTool {
   private readonly fs: FilesystemService;
 
-  constructor(template: string, instanceId: string) {
-    this.fs = new FilesystemService(template, instanceId);
+  constructor(projectId: string, instanceId: string) {
+    this.fs = new FilesystemService(projectId, instanceId);
   }
 
   /**
