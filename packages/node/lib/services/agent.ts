@@ -8,7 +8,7 @@ import {
   MetricsRequest,
   MetricsResponse
 } from '../generated/agent';
-import { METALLIC_AGENT_PORT } from '../utils/constants';
+import { createAgentUrl } from '../utils/helpers';
 
 export class AgentService {
   private client: AgentClient;
@@ -17,10 +17,7 @@ export class AgentService {
     private projectId: string,
     private instanceId: string
   ) {
-    this.client = new AgentClient(
-      `${projectId}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
-      grpc.credentials.createSsl()
-    );
+    this.client = new AgentClient(createAgentUrl(projectId, instanceId), grpc.credentials.createSsl());
   }
 
   async healthCheck(): Promise<HealthCheckResponse> {

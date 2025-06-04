@@ -22,16 +22,13 @@ import {
   WriteFileRequest,
   WriteFileResponse
 } from '../generated/filesystem';
-import { METALLIC_AGENT_PORT } from '../utils/constants';
+import { createAgentUrl } from '../utils/helpers';
 
 export class FilesystemService {
   private client: FilesystemClient;
 
   constructor(projectId: string, instanceId: string) {
-    this.client = new FilesystemClient(
-      `${projectId}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
-      grpc.credentials.createSsl()
-    );
+    this.client = new FilesystemClient(createAgentUrl(projectId, instanceId), grpc.credentials.createSsl());
   }
 
   async readFile(req: ReadFileRequest): Promise<ReadFileResponse> {

@@ -13,16 +13,13 @@ import {
   UpdateProcessRequest,
   UpdateProcessResponse
 } from '../generated/terminal';
-import { METALLIC_AGENT_PORT } from '../utils/constants';
+import { createAgentUrl } from '../utils/helpers';
 
 export class TerminalService {
   private client: TerminalClient;
 
   constructor(projectId: string, instanceId: string) {
-    this.client = new TerminalClient(
-      `${projectId}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
-      grpc.credentials.createSsl()
-    );
+    this.client = new TerminalClient(createAgentUrl(projectId, instanceId), grpc.credentials.createSsl());
   }
 
   async listProcesses(req: ListProcessesRequest): Promise<ListProcessesResponse> {

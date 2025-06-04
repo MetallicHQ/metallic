@@ -6,16 +6,13 @@ import {
   TerminateSessionRequest,
   TerminateSessionResponse
 } from '../generated/browser';
-import { METALLIC_AGENT_PORT } from '../utils/constants';
+import { createAgentUrl } from '../utils/helpers';
 
 export class BrowserService {
   private client: BrowserClient;
 
   constructor(projectId: string, instanceId: string) {
-    this.client = new BrowserClient(
-      `${projectId}-${instanceId}-${METALLIC_AGENT_PORT}.metallic.computer:443`,
-      grpc.credentials.createSsl()
-    );
+    this.client = new BrowserClient(createAgentUrl(projectId, instanceId), grpc.credentials.createSsl());
   }
 
   async createSession(request: CreateSessionRequest): Promise<CreateSessionResponse> {
