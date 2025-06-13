@@ -8,6 +8,7 @@ import {
   ComputerConnectOptions,
   ComputerConstructorOptions,
   ComputerCreateOptions,
+  ComputerForkOptions,
   ComputerStartOptions,
   ComputerState,
   IComputer
@@ -17,7 +18,6 @@ import { Region } from './types/shared';
 export class Computer extends ApiClient {
   public readonly id: string;
   public readonly template: string;
-  public readonly state: ComputerState;
   public readonly region: Region;
   public readonly ttlSeconds: number | null;
   public readonly autoDestroy: boolean;
@@ -26,20 +26,30 @@ export class Computer extends ApiClient {
   public readonly fs: FilesystemTool;
   public readonly terminal: TerminalTool;
   public readonly browser: BrowserTool;
+  private _state: ComputerState;
+
+  public get state(): ComputerState {
+    return this._state;
+  }
 
   constructor(options: ComputerConstructorOptions) {
     super(options);
     this.id = options.id;
     this.template = options.template;
-    this.state = options.state;
     this.region = options.region;
     this.ttlSeconds = options.ttl_seconds;
     this.autoDestroy = options.auto_destroy;
     this.metadata = options.metadata;
+    this._state = options.state;
+
     this.agent = new AgentTool(options.project_id, options.instance_id);
     this.fs = new FilesystemTool(options.project_id, options.instance_id);
     this.terminal = new TerminalTool(options.project_id, options.instance_id);
     this.browser = new BrowserTool(options.project_id, options.instance_id);
+  }
+
+  private _setState(next: ComputerState) {
+    this._state = next;
   }
 
   /**
@@ -146,7 +156,8 @@ export class Computer extends ApiClient {
    * Stop the computer.
    */
   public async stop(): Promise<void> {
-    await this.api.post<IComputer>(`/computers/${this.id}/stop`);
+    const res = await this.api.post<IComputer>(`/computers/${this.id}/stop`);
+    this._setState(res.data.state);
   }
 
   /**
@@ -174,6 +185,27 @@ export class Computer extends ApiClient {
   }
 
   /**
+   * Fork an existing computer.
+   *
+   * @param computerId computer ID.
+   * @param options computer fork options.
+   *
+   * @returns computer instance.
+   *
+   * @example
+   * ```ts
+   * const computer = await Computer.create()
+   * const forkedComputer = await computer.fork()
+   * ```
+   * @constructs Computer
+   */
+  public async fork(computerId: string, options?: ComputerForkOptions): Promise<Computer> {
+    const client = new ApiClient(options);
+    const res = await client.api.post<IComputer>(`/computers/${computerId}/fork`);
+    return new Computer({ ...res.data, ...(options ?? {}) });
+  }
+
+  /**
    * Wait for the computer to reach a specific state.
    *
    * @param state state to wait for.
@@ -185,13 +217,18 @@ export class Computer extends ApiClient {
    * ```
    */
   public async waitForState(state: 'started' | 'stopped' | 'destroyed'): Promise<void> {
-    await this.api.get(`/computers/${this.id}/wait?state=${state}`);
+    const res = await this.api.get<{
+      success: true;
+      state: 'started' | 'stopped' | 'destroyed';
+    }>(`/computers/${this.id}/wait?state=${state}`);
+    this._setState(res.data.state);
   }
 
   /**
    * Destroy the computer.
    */
   public async destroy(): Promise<void> {
-    await this.api.delete(`/computers/${this.id}`);
+    const res = await this.api.delete<IComputer>(`/computers/${this.id}`);
+    this._setState(res.data.state);
   }
 }
