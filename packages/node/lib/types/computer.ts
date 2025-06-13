@@ -42,6 +42,8 @@ export interface ComputerConnectOptions extends ApiClientOptions {}
 
 export interface ComputerStartOptions extends ApiClientOptions {}
 
+export interface ComputerForkOptions extends ApiClientOptions {}
+
 export type ComputerState =
   | 'created'
   | 'starting'

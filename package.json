@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "generate": "node scripts/generate",
     "build:node": "npm run build -w @metallichq/sdk",
+    "test:node": "npm run test -w @metallichq/sdk",
     "build:python": "cd packages/python && poetry build",
     "publish:node": "cd packages/node && npm run build && npm publish --access public --tag beta"
   },
