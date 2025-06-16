@@ -7,3 +7,18 @@ license     = "MIT"
 readme      = "README.md"
 homepage    = "https://metallic.dev/"
 repository  = "https://github.com/metallichq/metallic"
+
+[tool.poetry.dependencies]
+python = "^3.8"
+grpcio = "^1.60.0"
+grpcio-tools = "^1.60.0"
+httpx = "^0.25.0"
+protobuf = "^4.25.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
